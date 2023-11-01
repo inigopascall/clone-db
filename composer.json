@@ -1,0 +1,24 @@
+{
+    "name": "inigopascall/clone-db",
+    "description": "Package for cloning medium-size databases by ordering tables by foreign-key dependencies and running batch inserts",
+    "type": "laravel-package",
+    "autoload": {
+        "psr-4": {
+            "InigoPascall\\CloneDB\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Inigo Pascall",
+            "email": "inigo@inigowebdesign.co.uk"
+        }
+    ],
+    "extra": {
+        "laravel": {
+            "providers": [
+                "InigoPascall\\CloneDB\\Providers\\CloneDBProvider"
+            ]
+        }
+    },
+    "require": {}
+}
