@@ -60,7 +60,7 @@ TARGET_DB_PASSWORD=mysqluserpass
 
 # 3. run the command with the source & target connection names as parameters. Check & confirm output.
 
-`php artisan db:clone my_source_db_connection my_target_db_connection`
+`php artisan clone:db my_source_db_connection my_target_db_connection`
 
 
 ## Cloning a remote database via SSH
