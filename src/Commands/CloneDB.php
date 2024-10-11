@@ -52,6 +52,33 @@ class CloneDB extends Command
     }
 
     /**
+     * Ensure we are handling enum types correctly; map 'enum' type to Doctrine's 'string' type
+     * @param $connection
+     * @return void
+     * @throws \Doctrine\DBAL\Exception
+     */
+    private function registerEnumTypes()
+    {
+        try{
+            if (!\Doctrine\DBAL\Types\Type::hasType('enum')) {
+                \Doctrine\DBAL\Types\Type::addType('enum', \Doctrine\DBAL\Types\StringType::class);
+            }
+
+            foreach([$this->db_connection_from, $this->db_connection_to] as $connection)
+            {
+                $platform = DB::connection($connection)->getDoctrineSchemaManager()->getDatabasePlatform();
+                $platform->registerDoctrineTypeMapping('enum', 'string');
+            }
+
+            return true;
+
+        } catch (\Exception $e) {
+            $this->error('Enum mapping failed: ' . $e->getMessage());
+            return false;
+        }
+    }
+
+    /**
      * Execute the console command.
      *
      * @return int
@@ -63,7 +90,7 @@ class CloneDB extends Command
         $style = new OutputFormatterStyle('yellow', 'default', ['bold']);
         $this->output->getFormatter()->setStyle('highlight', $style);
 
-        if($this->validateConnections() && $this->validateTables())
+        if($this->validateConnections() && $this->registerEnumTypes() && $this->validateTables())
         {
             $confirm = $this->confirm("<highlight>This will completely destroy and overwrite all data in the target database '$this->db_to_name'. Are you SURE you want to continue?</>");
 
